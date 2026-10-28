@@ -40,7 +40,9 @@ for (const file of pages) {
     s = s.replace(OLD, () => headerHtml(rel, active, pre ? 'pre' : ''));
     how = 'заменена старая';
   } else { report.push([relPath, 'нет шапки - пропущена']); continue; }
-  // <head>: header.css и header.js после последней таблицы стилей (прежняя ссылка на header.css заменяется)
+  // <head>: header.css и header.js после последней таблицы стилей (прежняя ссылка на header.css заменяется).
+  // Страница с пометкой <!-- head:manual --> подключает их сама (404.html: после <base>) - <head> не трогаем
+  if (s.includes('<!-- head:manual -->')) { writeFileSync(file, s.replace(/\n/g, eol)); report.push([relPath, how + ', <head> вручную']); continue; }
   s = s.replace(/<link rel="stylesheet" href="[^"]*_assets\/header\.css">\n?(<script src="[^"]*_assets\/header\.js"><\/script>\n?)?/, '');
   const links = [...s.matchAll(/<link rel="stylesheet"[^>]*>\n/g)].filter(m => m.index < s.indexOf('</head>'));
   const at = links.length ? links[links.length - 1].index + links[links.length - 1][0].length : s.indexOf('</head>');

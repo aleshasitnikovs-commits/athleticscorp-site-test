@@ -84,7 +84,7 @@ const BASE = `<script>(function(){var h=location.hostname,p=location.pathname.sp
  +'<link rel="icon" type="image/png" href="_assets/img/favicon-ac-64.png"><link rel="stylesheet" href="_assets/tokens.css"><link rel="stylesheet" href="_assets/header.css"><link rel="stylesheet" href="_assets/page.css">'
  +'<scr'+'ipt src="_assets/header.js"></scr'+'ipt><scr'+'ipt src="_assets/site.js"></scr'+'ipt>')})();</script>\n`;
 const head404 = head({ rel: '', title: 'Страница не найдена | Атлетикс Корп', desc: '', path: null, extra: '<meta name="robots" content="noindex">\n' })
-  .replace(/<link rel="(icon|stylesheet)"[^>]*>\n|<script src="_assets\/[^"]*"><\/script>\n/g, '').replace('<meta charset="utf-8">\n', '<meta charset="utf-8">\n' + BASE);
+  .replace(/<link rel="(icon|stylesheet)"[^>]*>\n|<script src="_assets\/[^"]*"><\/script>\n/g, '').replace('<meta charset="utf-8">\n', '<meta charset="utf-8">\n<!-- head:manual -->\n' + BASE);   // пометка для _header-apply.mjs
 W('404.html', head404 + `<main class="center">
   <div class="center-in">
     <span class="eyebrow">Ошибка 404</span>
