@@ -78,8 +78,14 @@ for (const [k, [txt, href, btn]] of Object.entries(THANKS)) {
 
 // ---------------------------------------------------------------- 404: адреса от корня сайта (страница отдаётся по любому адресу)
 // <base> ставится до стилей: на github.io корень сайта - первый сегмент пути (/имя-репозитория/), на домене - «/»
-const BASE = `<script>(function(){var h=location.hostname,p=location.pathname.split('/');document.write('<base href="'+(/github\\.io$/.test(h)&&p[1]?'/'+p[1]+'/':'/')+'">')})();</script>\n`;
-W('404.html', head({ rel: '', title: 'Страница не найдена | Атлетикс Корп', desc: '', path: null, extra: '<meta name="robots" content="noindex">\n' }).replace('<meta charset="utf-8">\n', '<meta charset="utf-8">\n' + BASE) + `<main class="center">
+// Стили и скрипты пишет тот же скрипт после <base>: иначе браузер успевает заранее запросить их по
+// относительным путям от адреса ошибки (лишние 404 в консоли).
+const BASE = `<script>(function(){var h=location.hostname,p=location.pathname.split('/');document.write('<base href="'+(/github\\.io$/.test(h)&&p[1]?'/'+p[1]+'/':'/')+'">'
+ +'<link rel="icon" type="image/png" href="_assets/img/favicon-ac-64.png"><link rel="stylesheet" href="_assets/tokens.css"><link rel="stylesheet" href="_assets/header.css"><link rel="stylesheet" href="_assets/page.css">'
+ +'<scr'+'ipt src="_assets/header.js"></scr'+'ipt><scr'+'ipt src="_assets/site.js"></scr'+'ipt>')})();</script>\n`;
+const head404 = head({ rel: '', title: 'Страница не найдена | Атлетикс Корп', desc: '', path: null, extra: '<meta name="robots" content="noindex">\n' })
+  .replace(/<link rel="(icon|stylesheet)"[^>]*>\n|<script src="_assets\/[^"]*"><\/script>\n/g, '').replace('<meta charset="utf-8">\n', '<meta charset="utf-8">\n' + BASE);
+W('404.html', head404 + `<main class="center">
   <div class="center-in">
     <span class="eyebrow">Ошибка 404</span>
     <h1>Такой страницы нет</h1>
